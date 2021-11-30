@@ -29,7 +29,7 @@ output: distill::distill_article
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Il est maintenant le temps de décrire votre projet avant de passer au document suivant, soit l'importation et la manipulation des données. 
+Il est maintenant le temps de décrire votre projet avant de passer au document suivant, soit l'importation et la manipulation des données...
 
 Il s'agit d'un fichier R Markdown traditionnel, évidemment. Je vous conseille d'écrire cette partie en dernier, une fois que vous aurez déjà vos résultats et figures afin d'éviter de réécrire cette page plusieurs fois.
 
