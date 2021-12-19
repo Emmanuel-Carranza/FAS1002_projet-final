@@ -1,9 +1,9 @@
 ---
-title: "Titre de votre projet final"
+title: "Did Covid-19 blablahblah "
 description: |
   Ceci est votre page d'accueil de votre site web
 site: distill::distill_website
-toc: false
+toc: no
 ---
 
 ```{r setup, include=FALSE}

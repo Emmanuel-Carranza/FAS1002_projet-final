@@ -1,0 +1,7 @@
+"location","iso_code","date","total_vaccinations","people_vaccinated","people_fully_vaccinated","total_vaccinations_per_hundred","people_vaccinated_per_hundred","people_fully_vaccinated_per_hundred","population","life_expectancy","pop_text"
+"Africa","OWID_AFR",2021-12-17,279362226,177104083,115130068,20.34,12.89,8.38,1371687302,67.2,"1.4B"
+"Asia","OWID_ASI",2021-12-17,5876169769,3054921588,2491386279,125.6,65.3,53.25,4617906978,74.03,"4.6B"
+"Europe","OWID_EUR",2021-12-17,1042518240,481193363,450064819,139.19,64.25,60.09,850833567,78.97,"850.8M"
+"North America","OWID_NAM",2021-12-17,794157834,401159091,336196747,133.12,67.24,56.35,596564730,79.15,"596.6M"
+"South America","OWID_SAM",2021-12-17,628085958,328398340,270342293,144.63,75.62,62.25,434260151,75.24,"434.3M"
+"World","OWID_WRL",2021-12-17,8672704087,4468924554,3687893942,110.13,56.75,46.83,7874965732,73.75,"7.9B"
