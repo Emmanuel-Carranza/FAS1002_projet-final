@@ -5,16 +5,12 @@ description: |
 date: "`r Sys.Date()`"
 # Modifier les détails que vous voulez
 author:
-  - first_name: "Prénom"
-    last_name: "Nom"
-    url: https://github.com/votre-username
-    # les champs d'affiliation sont optionnels, vous pouvez les
-    # comment out en ajoutant un # devant.
-    affiliation: FAS1002
+  - first_name: "Emmanuel"
+    last_name: "Carranza"
+    url: https://github.com/emmanuel-carranza
+    affiliation: Université de Montréal
     affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
-    # changer pour votre propre orcid id
-    # https://orcid.org/ pour vous inscrire.
-    orcid_id: 0000-0000-0000-0000
+    orcid_id: 0000-0003-2651-6737
 # Changer pour votre propre URL si jamais quelqu'un vous cite!
 citation_url: https://fas1002.github.io/FAS1002_projet-final
 # Inclure les références que vous utilisez dans vos rapports
@@ -29,10 +25,115 @@ output: distill::distill_article
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Vous pouvez maintenant importer et travailler sur vos données, comme celles de @mathieu2021.
+# BANQUE DE DONNÉES DES VACCINS 
+```{r, message=FALSE,warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(rvest)
+#J'applique la fonction pour avoir des information sur le fichier local.
+vacc_db_info <- file.info("data/raw/covid19vacc.csv")
+
+#Si le fichier n'a pas été mis a jour dans les dernières 24 heures,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(difftime(Sys.time(),vacc_db_info$ctime, units = "hours") > 24,
+       download.file("https://github.com/owid/covid-19-data/raw/master/public/data/vaccinations/vaccinations.csv", destfile = "data/raw/covid19vacc.csv"),
+       "La banque de données à été mise a jour dans les 24 dernières heures")
+
+#Lecture du fichier csv
+vax_raw <- read_csv("data/raw/covid19vacc.csv")
+```
+
+# BANQUE DE DONNÉES DE POPULATION MONDIALE
+```{r,message=FALSE,warning=FALSE}
+# J'applique la fonction pour avoir des informations sur le fichier local.
+fileinfo_pop <- file.info("data/raw/gapminder_pop.xlsx")
+
+#Si le fichier n'a pas été mis a jour dans les 30 derniers jours,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(difftime(Sys.time(),fileinfo_pop$ctime, units = "days" ) > 30 , download.file("https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/export?format=xlsx", destfile = "data/raw/gapminder_pop.xlsx"),
+       "La banque de données a été mise à jour dans les 30 derniers jours.")
 
 
-### Différents niveaux de titres
+#Lecture du fichier excel pour la population des pays individuellement.
+country_pop_raw <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A3:KQ200")
 
-Dans vos différents documents, assurez-vous de bien utiliser la notation avec du Markdown et autres. 
+#Lecture du même fichier excel mais pour la population par continent.
+continent_pop_raw <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A202:KQ207")
+```
+
+# BANQUE DE DONNÉES "LIFE EXPECTENCY"
+```{r,echo=FALSE}
+# J'applique la fonction pour avoir des informations sur le fichier local.
+fileinfo_life <- file.info("data/raw/gapminder_lifeexp.xlsx")
+
+#Si le fichier n'a pas été mis a jour dans les 30 derniers jours,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(difftime(Sys.time(),fileinfo_pop$ctime, units = "days" ) > 30, download.file("https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/export?format=xlsx", destfile = "data/raw/gapminder_lifeexp.xlsx"),
+       "La banque de données a été mise à jour dans les 30 derniers jours.")
+
+#Lecture du fichier excel pour l'espérance de vie groupé par pays.
+life_country_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A4:KQ201")
+
+#Lecture du fichier excel pour l'espérance de vie groupé par continent.
+life_continent_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A203:KQ208")
+```
+
+
+#WEBSCRAPING DES DONNÉES MANQUANTES POUR LES CONTINENTS
+```{r}
+#NORDIC AMERICA POPULATION
+
+link_nap = "https://worldpopulationreview.com/continents/north-america-population"
+page_nap = read_html(link_nap) # Page internet qui contient un effectif de la population
+
+n_america_pop = page_nap %>% # Selection du nombre recherché
+    html_nodes(".center span") %>% 
+    html_text 
+
+n_america_pop = as.numeric(gsub(",","",n_america_pop)) # Soustraction des virgules 
+
+n_america_pop # 96564730 personne en Amérique du North
+
+#NORTH AMERICAN LIFE EXPECTENCY
+
+link_nal = "https://www.macrotrends.net/countries/NAC/north-america/life-expectancy"
+page_nal = read_html(link_nal) # Page internet qui contient l'espérance de vie en Amérique du Nord
+
+n_america_life = page_nal %>% # Selection du nombre recherché
+    html_nodes("li:nth-child(1) strong:nth-child(1)") %>% 
+    html_text 
+
+n_america_life <- as.numeric(n_america_life)
+
+#SOUTH AMERICAN POPULATION
+
+link_sap = "https://worldpopulationreview.com/continents/south-america-population"
+page_sap = read_html(link_sap) # Page internet qui contient la population d'Amérique du sud
+
+s_america_pop = page_sap %>% # Sélection du nombre recherché
+    html_nodes(".center span") %>% 
+    html_text 
+
+s_america_pop <- as.numeric(gsub(",","",s_america_pop))
+
+s_america_pop # La population est 434260151 à ce jour
+
+#SOUTH AMERICAN LIFE EXPECTENCY
+
+link_sal = "https://www.macrotrends.net/countries/LCR/latin-america-and-the-caribbean/life-expectancy#:~:text=The%20current%20life%20expectancy%20for,a%200%25%20increase%20from%202019"
+page_sal = read_html(link_sal) # Page internet qui contient la population d'Amérique du sud
+
+s_america_life = page_sal %>% # Sélection du nombre recherché
+    html_nodes("li:nth-child(1) strong:nth-child(1)") %>% 
+    html_text 
+
+s_america_life <- as.numeric(s_america_life)
+
+s_america_life # L'espérance de vie est de 75.24 ans
+```
+
+```{r}
+library(rmarkdown)
+paged_table(biggest_countries)
+```
 
