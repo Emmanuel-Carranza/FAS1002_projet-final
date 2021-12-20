@@ -1,7 +1,6 @@
 ---
-title: "Did Covid-19 blablahblah "
+title: "Les taux de vaccinations"
 description: |
-  Ceci est votre page d'accueil de votre site web
 site: distill::distill_website
 toc: no
 ---
@@ -10,32 +9,41 @@ toc: no
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Vous pouvez faire le résumé de votre projet directement sur cette page et utiliser le document [1-intro](1-intro.html) pour décrire votre projet.
+  Il est difficile de croire que nous somme déjà rendu à la troisième dose du vaccins contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si, on se fit au graphique ci dessous c'est moins de la moitié. 
+  
+```{r}
+library(tidyverse)
+library(RColorBrewer)
 
-Il s'agit d'un fichier R Markdown traditionnel. ^[Avec des petits trucs sympa comme des notes de bas de page]
+continent_vax <- read_csv("data/processed/continent_vax.csv")
 
-## Inclure des graphiques
+graph_cont <- ggplot(continent_vax,
+                 aes(x= reorder(paste(location, pop_text),population),
+                      y= people_fully_vaccinated_per_hundred, fill=location))+
+        geom_bar(stat="identity", show.legend=FALSE)+
+        scale_fill_brewer(palette="Spectral")+
+        geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
+                    hjust = -0.1)+
+        labs(x = " ", y = "Ayant reçu 2 doses",
+            title = "Pourcentage de vaccinations par continent",
+            caption = "Data source: Our World In Data")+
+        expand_limits(y = 100)+
+        theme_minimal()+
+        coord_flip()
 
-Comme la classique pyramide à la Figure \@ref(fig:pie) par exemple:
-
-```{r pie, fig.cap='Une très belle tarte', tidy=FALSE}
-par(mar = c(0, 1, 0, 1))
-pie(
-  c(280, 60, 20),
-  c('Ciel', 'Côté ensoleillé de la pyramide', 'Côté ombragé de la pyramide'),
-  col = c('#0292D8', '#F7EA39', '#C4B632'),
-  init.angle = -50, border = NA
-)
+graph_cont
 ```
+  
+ Dans les pages qui suivent, vous allez pouvoir avoir une description des banques de données utilisées ainsi que des variables les constituants sur la page [1-intro](1-intro.html). Une analyse et visualisations seront disponible sur la page [2-analyse](2-analyse.html). Pour ceux ayant suivit un cours de programmation R, la page [3-manipulation](3-manipulation.html) sera consacré aux bribe de code R qui m'ont servis tout au long de mon projet.^[Ce projet à été écrit en Décembre 2021.]
+ 
+ Pour terminer, l'ensemble des citations pour les sources des banques de données, ainsi que des packages utilisés, seront inscrits dans la page [4-citation](4-citation.html).
+ 
+ Bonne lecture !
+ 
+ 
 
-<aside>
-Quand même très cool, non? Vous pouvez mettre des annotations sur le côté! 
-</aside>
-
-### Toujours très important de mettre les bons niveaux de titres
-
-Un peu de texte de remplissage pour faire comme si la page était plus longue. *Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.*
 
 ## Remerciements {.appendix}
 
-J'aimerais remercier toutes les étudiantes et tous les étudiants du cours FAS1002 de l'automne 2021 pour leur enthousiasme, leur ouverture et leur rétroaction envers le cours!
+J'aimerais remercier mon enseignant pour le cours FAS1002 qui nous beaucoup
+appris cette session.
