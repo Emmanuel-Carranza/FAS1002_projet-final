@@ -1,9 +1,7 @@
 ---
-title: "Analyse des données de vaccinations mondiales"
+title: "Introduction"
 description: | 
-  *Décembre 2021*
 date: "`r Sys.Date()`"
-# Modifier les détails que vous voulez
 author:
   - first_name: "Emmanuel"
     last_name: "Carranza"
@@ -11,14 +9,13 @@ author:
     affiliation: Université de Montréal
     affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
     orcid_id: 0000-0003-2651-6737
-# Changer pour votre propre URL si jamais quelqu'un vous cite!
-citation_url: https://fas1002.github.io/FAS1002_projet-final
-# Inclure les références que vous utilisez dans vos rapports
-# dans un fichier biblio.bib. Je conseille Zotero pour construire
-# ce fichier ou d'utiliser le package citr dans RStudio.
+citation_url:  https://github.com/Emmanuel-Carranza/FAS1002_projet-final
 # Installation: devtools::install_github("crsh/citr")
 bibliography: references.bib
 output: distill::distill_article
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
@@ -26,20 +23,126 @@ knitr::opts_chunk$set(echo = FALSE)
 library(plotly)
 ```
 
-Il est maintenant le temps de décrire votre projet avant de passer au document suivant, soit l'importation et la manipulation des données...
+Ma première banque de données provient de [Our World in Data](https://ourworldindata.org/).
+Grâce à leur merveilleux travail, j'ai pu acccèder au fichier .CSV sur leur page [Github](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations) qui contient les données de vaccinations de chaque pays mise à jour régulièrement.
+Ma deuxième provient tout droit de la fondation [Gapminder](https://www.gapminder.org/) qui nous fournit de l'information quant au [effectif de population](https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/edit#gid=501532268) ainsi que de [l'espérance de vie](https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/edit#gid=501532268) de chaque pays.
 
-Il s'agit d'un fichier R Markdown traditionnel, évidemment. Je vous conseille d'écrire cette partie en dernier, une fois que vous aurez déjà vos résultats et figures afin d'éviter de réécrire cette page plusieurs fois.
+## Données Brutes
 
-## Inclure des graphiques ou des images pour présenter les ensembles de données.
+### La banque de données de vaccinations de Our World in Data
 
-Comme la Figure \@ref(fig:diam) par exemple:
+Cette banque de données est mise à jour quotidiennement, ce qui la rend très fiable.
+Elle est consitué des dizaines des milliers d'observations avec multitude de variables.
+Chaque observation contient le nom d'un pays ou d'un continent, ainsi que des données par rapport au taux de vaccinations.
 
-```{r diam, layout="l-body-outset", fig.width=6, fig.height=1.5, fig.cap="Beaucoup de diamants"}
-library(ggplot2)
-ggplot(diamonds, aes(carat, price)) + geom_smooth() +
-  facet_grid(~ cut)
+-   location : nom du pays (ou de la région d'un pays).
+-   iso_code : Codes de pays à trois lettres ou OWID pour continents
+-   date : date de l'observation.
+-   total_vaccinations : nombre total de doses administrées.
+-   total_vaccinations_per_hundred: le nombre total de doses administrés divisé par la population totale
+-   daily_vaccinations_raw : variation quotidienne du nombre total de doses administrées.
+-   vaccinations_quotidiennes : nouvelles doses administrées par jour (lissé 7 jours).
+-   daily_vaccinations_per_million:vaccinations quotidiennes pour un million de personnes dans la population totale du pays.
+-   people_vaccinated : nombre total de personnes ayant reçu au moins une dose de vaccin. people_vaccinated_per_hundred: personnes_vaccinées pour 100 personnes dans la population totale du pays.
+-   people_fully_vaccinated : nombre total de personnes ayant reçu deux doses prescrites par le protocole de vaccination. Si une personne reçoit la première dose d'un vaccin à 2 doses, cette mesure reste la même. S'ils reçoivent la deuxième dose, la métrique augmente de 1.
+-   people_fully_vaccinated_per_hundred : people_fully_vaccinated pour 100 personnes dans la population totale du pays.
+-   total_boosters : nombre total de rappels de vaccination COVID-19 administrés (doses administrées au-delà du nombre prescrit par le protocole de vaccination)
+-   total_boosters_per_hundred: nombre total de doses de rappel de vaccination COVID-19 administrées pour 100 personnes dans la population totale.
+
+```{r,layout = "l-page"}
+library(tidyverse)
+library(rmarkdown)
+raw_vax <- read_csv("data/raw/covid19vacc.csv")
+paged_table(raw_vax)
 ```
 
-### Différents niveaux de titres
+### La banque de données des population de Gapminder
 
-Dans vos différents documents, assurez-vous de bien utiliser Markdown et autres. 
+
+Cette banque de données contient des effectifs de population pour de centaines de pays ainsi que les continents d'Afrique, D'Asie, D'Europe et de la planète entière. J'ai remarqué de l'Océanie ne s'y trouve et je ne sais expliquer pourquoi.
+
+
+-   geo : Codes de pays à trois lettres
+-   name: Nom du pays ou du continent
+-   1800-2100: 300 années de population par pays. Celle qui sont après le présent, sont tirés d'un estimé de projection.
+
+Par pays:
+
+```{r,layout = "l-page"}
+library(readxl)
+
+raw_pop_country <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A3:KQ200")
+raw_pop_continent <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A202:KQ207")
+paged_table(raw_pop_country)
+```
+
+Par continent :
+
+```{r,layout = "l-page"}
+paged_table(raw_pop_continent)
+```
+
+
+### La banque de données d'espérance de vie de Gapminder
+
+Cette banque est très similaire à la précédante.
+Elle contient les mêmes pays, continents et années que la précédante.
+Cette fois-ci nous avons les données sur l'espérance de vie moyenne des citoyens par pays respectif à travers les années.
+
+Par pays:
+
+```{r,layout = "l-page"}
+life_expectancy_country_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A4:KQ201")
+life_expectancy_continent_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A203:KQ208")
+paged_table(life_expectancy_country_raw )
+```
+
+Par continent :
+
+```{r,layout = "l-page"}
+paged_table(life_expectancy_continent_raw )
+```
+
+## Données nettoyés, polis et résumés
+
+### Manipulation des données de vaccinations
+
+Puisque les données brutes sont des observations venant des différents pays sans régulations homogène, nous n'avons pas le privilège de pouvoir les analysé directement.Pour certains pays : il manque de l'information.Pour beaucoup d'autres, elles en sont pas transmissent de façon quotidienne.
+Et nous venons d'apprendre que 2 doses ne seront pas suffisantes.
+
+Mais cela ne pose aucun problème puisque j'ai accès au Tidyverse et ses multiples packages.
+J'ai commencer par regarder la banque de données en tableau pour avoir un aspect plus visuel.
+Je me suis débarassé des variables sur les quelles je ne voulais pas me concentrer.
+J'ai mis de coté les continents pour plustard ainsi que des valeurs comme "High" income ou "Low Income" qui se trouvais dans la colonne "location" avec tout les autres pays.
+Pour terminer j'ai sélectionné simplement la dernière journée d'observations de chaque pays sans informations manquantes.
+
+Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
+
+### Manipulation des données de population
+
+J'ai simplement selectionné les colonnes "location" pour les pays et "2021.0" puisque j'écris cette analyse en 2021.
+J'ai crée une autre banque de données avec les mêmes variables mais pour les continents
+
+Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
+
+### Manipulation des données d'espérance de vie
+
+J'ai fais exactement la même chose que pour la précédante.
+
+### Jumelage des banques de données
+
+J'ai jumelé les banques de données par pays et par continent en m'assurant de garder la dernière observation par pays sans information manquante. Les fichiers CSV que vous pouvez voir ci-dessous contiennent la plus récente observation par pays et non l'ensemble de celles compililé tout les jours.
+
+Voici la banque de données nettoyé par pays :
+
+```{r,layout = "l-page"}
+vax_country <- read_csv("data/processed/country_vax.csv")
+paged_table(vax_country)
+```
+
+Voici la banque de données nettoyé par continent :
+
+```{r,layout = "l-page"}
+vax_continent <- read_csv("data/processed/continent_vax.csv")
+paged_table(vax_continent)
+```
