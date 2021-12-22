@@ -1,0 +1,492 @@
+---
+title: "Manipulation des banques de données"
+description: | 
+date: "`r Sys.Date()`"
+# Modifier les détails que vous voulez
+author:
+  - first_name: "Emmanuel"
+    last_name: "Carranza"
+    url: https://github.com/emmanuel-carranza
+    affiliation: Université de Montréal
+    affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
+    orcid_id: 0000-0003-2651-6737
+# Changer pour votre propre URL si jamais quelqu'un vous cite!
+citation_url: https://fas1002.github.io/FAS1002_projet-final
+# Inclure les références que vous utilisez dans vos rapports
+# dans un fichier biblio.bib. Je conseille Zotero pour construire
+# ce fichier ou d'utiliser le package citr dans RStudio.
+# Installation: devtools::install_github("crsh/citr")
+bibliography: references.bib
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Packages utilisés
+
+```{r,results=FALSE}
+library(tidyverse)
+library(readxl)
+library(rmarkdown)
+library(lubridate)
+library(data.table)
+library(arsenal)
+library(RColorBrewer)
+library(rvest)
+library(citr)
+library(scales)
+```
+[@allaire_rmarkdown_2021; @dowle_datatable_2021; @heinzen_arsenal_2021; @neuwirth_rcolorbrewer_2014; @noauthor_cran_nodate; @spinu_lubridate_2021; @wickham_readxl_2019; @wickham_rvest_2021; @wickham_scales_2020; @wickham_tidyverse_2021]
+
+## Est-ce que l'information est à jour ?
+
+### Banques de données des vaccins
+
+
+```{r}
+vacc_db_info <- file.info("data/raw/covid19vacc.csv")
+# Accès aux informations du fichier local.
+
+
+#Si le fichier n'a pas été mis a jour dans les dernières 24 heures,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(
+    difftime(Sys.time(),vacc_db_info$ctime, units = "hours") > 24,
+       download.file("https://github.com/owid/covid-19-data/raw/master/public/data/vaccinations/vaccinations.csv",
+                     destfile = "data/raw/covid19vacc.csv"),
+       "La banque de données a été mise à jour dans les 24 dernières heures")
+```
+[@noauthor_covid-19_2021]
+
+### Banque de données des populations
+
+```{r}
+fileinfo_pop <- file.info("data/raw/gapminder_pop.xlsx")
+# Accès aux informations du fichier local.
+
+#Si le fichier n'a pas été mis à jour dans les 30 derniers jours,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(
+  difftime(Sys.time(),fileinfo_pop$ctime, units = "days" ) > 30, download.file("https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/export?format=xlsx",
+              destfile = "data/raw/gapminder_pop.xlsx"),
+       "La banque de données a été mise à jour dans les 30 derniers jours.")
+
+```
+[@noauthor_gm-population_nodate]
+
+### Banque de données de l'espérance de vie
+
+
+```{r}
+fileinfo_life <- file.info("data/raw/gapminder_lifeexp.xlsx")
+#informations du fichier local.
+
+
+#Si le fichier n'a pas été mis a jour dans les 30 derniers jours,
+#J'applique la fonction download.file pour télécharger la banque de données.
+ifelse(difftime(Sys.time(),fileinfo_pop$ctime, units = "days" ) > 30, download.file("https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/export?format=xlsx", destfile = "data/raw/gapminder_lifeexp.xlsx"),
+       "La banque de données a été mise à jour dans les 30 derniers jours.")
+
+```
+[@noauthor_gm-life_nodate-1]
+
+## Lecture et manipulation des données
+
+### Banques de données des vaccins
+
+```{r,results=FALSE}
+vax_raw <- read_csv("data/raw/covid19vacc.csv")
+
+vaxd <- vax_raw %>% 
+    mutate(location=factor(location),
+        iso_code=recode(iso_code, 
+                         "OWID_KOS"="KOS",
+                         "OWID_CYN"="CYN",
+                         "OWID_SCT"="SCT",
+                         "OWID_WLS"="WLS",
+                         "OWID_ENG"="ENG",
+                         "OWID_NIR"="NIR",
+                         "OWID_UMC"="income",
+                         "OWID_LIC"="income",
+                         "OWID_HIC"="income",
+                         "OWID_LMC"="income")) %>% 
+    select(-c(daily_vaccinations_raw,total_boosters_per_hundred,
+              total_boosters,daily_vaccinations_per_million,
+              daily_people_vaccinated_per_hundred,daily_people_vaccinated,
+              daily_vaccinations))%>% # J'en ai pas besoin.
+  na.omit() #pour se simplifier la vie.
+
+country_vax_everyday <- vaxd[vaxd$iso_code %like% "^[a-zA-Z]{3}$", ]
+#Juste les pays
+
+country_vax <- country_vax_everyday %>% 
+  group_by(location) %>%
+slice(which.max(as.Date(date, '%Y/%m/%d')))
+#Seulement la dernière observation
+#Puisque j'ai enlevé tout les NA's, il est possible que l'observation
+#sélectionné ici ne soit pas la dernière mise à jour. Cependant,elle va être la
+#dernière mise à jour qui contient les informations que j'ai selectionné.
+
+unique(country_vax$location) 
+#235 unique countries
+
+continent_vax <- vaxd[vaxd$iso_code %like% "OWID", ] %>% 
+                mutate(location=factor(location))
+# Sous ensemble de ceux vacciné, groupé par continent
+
+continent_vax <- continent_vax[continent_vax$location %in% c("Africa","Asia","Europe","North America","Oceania","South America","World"), ]
+#J'enlève l'union européenne
+
+continent_vax <- continent_vax %>% 
+  group_by(location) %>%
+slice(which.max(as.Date(date, '%Y/%m/%d')))
+#Je prend seulement la dernière observation de chaque continent.
+```
+
+
+### Banque de données des populations
+
+```{r,results=FALSE}
+
+country_pop_raw <- read_xlsx("data/raw/gapminder_pop.xlsx",
+                             sheet = 7, range = "A3:KQ200")
+#Lecture du fichier excel pour la population des pays individuellement.
+
+
+continent_pop_raw <- read_xlsx("data/raw/gapminder_pop.xlsx",
+                               sheet = 7, range = "A202:KQ207")
+#Lecture du même fichier excel mais pour la population par continent.
+
+
+country_pop <- country_pop_raw %>% 
+    mutate(name=factor(name)) %>%
+    select(c(name, `2021.0`))
+#Je vais garder juste le nom du pays et la population en 2021
+
+
+continent_pop <- continent_pop_raw %>% 
+    select(c(name,`2021.0`))
+#Même chose mais pour les continents
+
+names(country_pop)[1] <- "location"
+names(continent_pop)[1] <- "location"
+# Je renomme le nom de la colonne pour pouvoir la "merge" avec 
+# la banque de données de vaccination.
+```
+
+
+
+### Banque de données d'espérance de vie
+
+```{r,results=FALSE}
+life_country_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx",
+                              sheet = 6, range = "A4:KQ201")
+#Lecture du fichier excel pour l'espérance de vie groupé par pays.
+
+
+life_continent_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx",
+                                sheet = 6, range = "A203:KQ208")
+#Lecture du fichier excel pour l'espérance de vie groupé par continent.
+
+
+life_country <- life_country_raw %>% 
+    mutate(name=factor(name)) %>% 
+    select(c(name,`2021.0`)) %>% 
+    na.omit()
+#Je prend juste le nom des pays et l'espérance de vie en 2021.
+
+names(life_country)[1] <- "location" 
+#Pour avoir le même nom que la banque de données des vaccins.
+
+life_continent <- life_continent_raw %>% 
+    mutate(name=factor(name)) %>% 
+    select(c(name,`2021.0`)) %>% 
+    na.omit()
+#Même chose pour les continents.
+
+names(life_continent)[1] <- "location"
+```
+
+### Webscraping des données manquantes
+
+```{r, results=FALSE}
+##POPULATION D'AMÉRIQUE DU NORD
+
+link_nap = "https://worldpopulationreview.com/continents/north-america-population"
+page_nap = read_html(link_nap)
+#Page internet qui contient un effectif de la population
+
+n_america_pop = page_nap %>%
+    html_nodes(".center span") %>% 
+    html_text 
+ # Selection du nombre recherché
+
+n_america_pop = as.numeric(gsub(",","",n_america_pop))
+#Soustraction des virgules 
+#96564730 personne en Amérique du North
+
+
+##ESPÉRANCE DE VIE DE L'AMÉRIQUE DU NORD
+
+link_nal = "https://www.macrotrends.net/countries/NAC/north-america/life-expectancy"
+page_nal = read_html(link_nal)
+#Page internet qui contient l'espérance de vie en Amérique du Nord
+
+n_america_life = page_nal %>%
+    html_nodes("li:nth-child(1) strong:nth-child(1)") %>% 
+    html_text 
+#Selection du nombre recherché
+
+n_america_life <- as.numeric(n_america_life)
+
+
+#POPULATION D'AMÉRIQUE DU SUD
+
+link_sap = "https://worldpopulationreview.com/continents/south-america-population"
+page_sap = read_html(link_sap)
+#Page internet qui contient la population d'Amérique du sud
+
+s_america_pop = page_sap %>% 
+    html_nodes(".center span") %>% 
+    html_text 
+# Sélection du nombre recherché
+
+s_america_pop <- as.numeric(gsub(",","",s_america_pop))
+# La population est 434260151 à ce jour
+
+#ESPÉRANCE DE VIE D'AMÉRIQUE DU SUD
+
+link_sal = "https://www.macrotrends.net/countries/LCR/latin-america-and-the-caribbean/life-expectancy#:~:text=The%20current%20life%20expectancy%20for,a%200%25%20increase%20from%202019"
+page_sal = read_html(link_sal)
+#Page internet qui contient la population d'Amérique du sud
+
+s_america_life = page_sal %>%
+    html_nodes("li:nth-child(1) strong:nth-child(1)") %>% 
+    html_text 
+#Sélection du nombre recherché
+
+s_america_life <- as.numeric(s_america_life)
+#L'espérance de vie est de 75.24 ans
+
+## CREATION D'UN DATAFRAME DES DONNÉES MANQUANTES
+
+american_life_exp <- data.frame( c("North America", "South America"),
+                      c(n_america_life, s_america_life))
+# Création d'un data frame pour les données manquantes d'espérance de vie
+
+names(american_life_exp) <- c("location","2021.0")
+
+# jonction de ces données à life_continent
+continent_lifenew <- rbind(life_continent,american_life_exp)
+
+# Création d'un data frame pour les données manquantes de population
+american_pop <- data.frame( c("North America", "South America"),
+                            c(n_america_pop, s_america_pop))
+
+names(american_pop) <- c("location","2021.0")
+
+
+continent_pop_new <- rbind(continent_pop,american_pop)
+#Jonction des informations webscrapé aux donné de population de gapminder
+
+```
+[@noauthor_latin_nodate; @noauthor_north_nodate; @noauthor_north_nodate-1; @noauthor_south_nodate]
+
+
+## Jonction des banques de données
+
+```{r}
+continent_pop_life <- merge(continent_pop_new, continent_lifenew, by = "location") %>%
+rename("population" = "2021.0.x",
+"life_expectancy" = "2021.0.y")
+#Jonction de l'espérance de vie et population des continents
+
+continent_vax <- merge(continent_vax, continent_pop_life, by = "location")
+# Merge cette dernière avec ma banque de données des vaccinations par continents
+
+
+continent_vax <- continent_vax %>%
+            mutate(pop_text = label_number_si(accuracy=0.1)(population))
+# Nouvelle variable qui donne les chiffres en abréviation
+
+
+country_vax <- merge(country_vax, country_pop, by = "location")
+# Je joins les informations de population à celles des vaccins par pays
+
+country_vax <- merge(country_vax, life_country, by = "location")
+#Je join les informations d'espérance de vie à celles des vaccins par pays
+
+country_vax <- country_vax %>% 
+              rename("population" = "2021.0.x",
+                     "life_expectancy" = "2021.0.y")
+#Renomme les colonnes
+
+country_vax <- country_vax %>% 
+          mutate(pop_text = label_number_si(accuracy=0.1)(population))
+#Ajout d'une variable de population abbrévié
+
+```
+
+## Visualisations
+
+### Espérance de vie les plus basses
+
+```{r}
+lower_life_exp <- country_vax[order(as.integer(country_vax$life_expectancy),
+                                    decreasing = FALSE), ] %>%
+                                      head(10)
+#10 pays avec la plus basse espérance de vie
+
+graph <- ggplot(lower_life_exp,
+                 aes(x= reorder(paste(location, life_expectancy),people_fully_vaccinated_per_hundred),
+                      y= people_fully_vaccinated_per_hundred, fill=location))+
+        geom_bar(stat="identity", show.legend=FALSE)+
+        scale_fill_brewer(palette="Spectral")+
+        geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
+                    hjust = -0.1)+
+        labs(x = "Pays et espérance de vie en années", y = "pourcentage ayant reçu 2 doses",
+            title = "Vaccinations pour les pays avec espérance de vie la plus basse",
+            caption = "Data source: Our World In Data & Gapminder")+
+        expand_limits(y = 100)+
+        theme_minimal()+
+        coord_flip()
+
+graph
+
+```
+
+### 10 pays avec la population la plus grande.
+
+```{r}
+biggest_countries <- country_vax[order(as.integer(country_vax$population),
+                                    decreasing = T), ] %>%
+                                      head(10)
+
+graph2 <- ggplot(biggest_countries,
+                 aes(x= reorder(paste(location, pop_text),population),
+                      y= people_fully_vaccinated_per_hundred, fill=location))+
+        geom_bar(stat="identity", show.legend=FALSE)+
+        scale_fill_brewer(palette="Spectral")+
+        geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
+                    hjust = -0.1)+
+        labs(x = "Pays & taille de population ", y = "Ayant reçu 2 doses",
+            title = "Vaccinations pour les pays les plus peuplés classé par taille",
+            caption = "Data source: Our World In Data & Gapminder")+
+        expand_limits(y = 100)+
+        theme_minimal()+
+        coord_flip()
+graph2
+
+
+```
+
+
+### Taux de vaccinations par continents
+
+```{r}
+graph_cont <- ggplot(continent_vax,
+                 aes(x= reorder(paste(location, pop_text),population),
+                      y= people_fully_vaccinated_per_hundred, fill=location))+
+        geom_bar(stat="identity", show.legend=FALSE)+
+        scale_fill_brewer(palette="Spectral")+
+        geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
+                    hjust = -0.1)+
+        labs(x = "Continent & taille de population", y = "Ayant reçu 2 doses",
+            title = "Pourcentage de vaccinations par continent",
+            caption = "Data source: Our World In Data & Gapminder")+
+        expand_limits(y = 100)+
+        theme_minimal()+
+        coord_flip()
+
+graph_cont
+```
+
+
+## Vérification si les taux de vaccinations sont fiable
+
+```{r}
+country_vax <- country_vax %>%
+          group_by(location)%>%
+          mutate(Percentage=paste0(round(total_vaccinations/(population)*100,2)))
+#Je vais le calcul moi même
+
+
+country_vax <- country_vax %>%
+  mutate("same_percentage" = ifelse(total_vaccinations_per_hundred == Percentage,
+                                    "Same","Incorrect"))
+# Identifie les variables qui diffèrent
+
+total_vax100_incorrect <- country_vax[country_vax$same_percentage == "Incorrect", ]%>%
+                          select(c("location",
+                                   "total_vaccinations_per_hundred",
+                                   "Percentage", "same_percentage")) %>% 
+                            mutate(Percentage=as.numeric(Percentage))
+
+
+total_vax100_incorrect <- total_vax100_incorrect %>% 
+  group_by(location) %>% 
+  mutate("difference" = (total_vaccinations_per_hundred)-(Percentage)) %>% 
+  mutate(difference=abs(difference))
+#Calcule la différence entre les pourcentages
+
+
+big_diff <- total_vax100_incorrect[order(total_vax100_incorrect$difference),]
+#Pour pouvoir en faire un csv plus tard
+
+
+```
+
+## Analyses statistiques
+
+### Régréssion linéaire
+
+```{r,}
+lm_country_vax <- lm(population ~ people_fully_vaccinated_per_hundred, country_vax)
+
+summary (lm_country_vax)
+
+linear_reg <- ggplot(country_vax, aes(x=population, 
+                         y=people_fully_vaccinated_per_hundred))+
+          geom_point()+
+          geom_smooth(formula = y ~ log(x), method = "lm",
+                      color = "#FFBF71")+
+          scale_x_continuous(trans = "log2")+
+          labs(x = "Pourcentage de citoyen d'un pays aillant reçu 2 doses",
+               y = "Temps sur échelle logarithmique",
+          title = "Taille de population VS pourcentage de vaccination à 2 dose")+
+          geom_text(aes(label=ifelse(population>1000000000,
+              as.character(location),'')),hjust=0.5,vjust=-1)
+
+
+```
+
+
+### Anova
+
+```{r}
+
+anova_df <- country_vax %>% 
+    select(c("location","total_vaccinations","population")) %>% 
+    mutate(location=factor(location))
+
+anova_df <- stack(anova_df)
+
+
+anova(lm(values ~ ind, anova_df))
+```
+
+
+## Exportation de mes données en CSV
+
+```{r}
+write.csv(country_vax,"data/processed/country_vax.csv")
+
+write.csv(continent_vax,"data/processed/continent_vax.csv")
+
+write.csv(country_vax_everyday,"data/processed/all_observations_country_vax.csv")
+
+write.csv(big_diff,"data/processed/big_diff.csv", row.names = FALSE)
+```
+

@@ -125,21 +125,21 @@ sum(is.na(vaxd_continent))
 
 Parmis ces nations, on compte une moyenne 298 jours de communications par pays depuis le 1er décembre 2020. C'est le Denmark qui enchaine le bal avec son premier vaccin à un citoyen (suite aux phases d'essaies). Ce qui fait aussi du `r first_date$location` le pays avec le plus d'entrées individuels à `r denmark_count`. Il est suivit de proche par la Norvege, la Lettonie, les États-Unis et le Canada.
 
-On constate des grosses et petites différences entre les pourcentages de gens vaccinés par pays que Our World In Data nous donne et ceux que j'ai calculé moi mêmes
+On constate des grosses et petites différences entre les pourcentages de gens vaccinés par pays que Our World In Data nous donne et ceux que j'ai calculé moi même.
 
 ```{r, layout = "l-page"}
 big_diff <- read_csv("data/processed/big_diff.csv")
 paged_table(big_diff)
 ```
-La colonne "Percentage" est celle que j'ai calculé en prennant le nombre total de vaccinations par pays divisé par la population total du pays. La colonne "difference" nous donne la différence de pourcentage constaté. Noté que le pourcentage peu effectivement dépasser le 100% puisque le nombre de vaccins administré va certainement dépasser celui de la population si on recoit 2 doses et plus pour chacun.
+La colonne "Percentage" est celle que j'ai calculé en prennant le nombre total de vaccinations par pays divisé par la population total du pays. La colonne "difference" nous donne la différence de pourcentage constaté. Noté que le pourcentage peu effectivement dépasser le 100% puisque le nombre de vaccins administré va certainement dépasser celui de la population si on recoit 2 doses et plus pour chacun. Certaines différences semblent être négligeable et d'autres sont beaucoup trop grosses. Difficile de dire si c'est parce que les données de vaccinations n'ont pas bien été enregistré dans le pays, ou si c'est parce que les données de populations sont des estimer.
 
 
-Les données de vaccinations contiennent tout les continents, avec l'Amérique séparée en deux, ainsi qu'une catégorie globale pour le total appellé 'WORLD'. Cependant les données de population ou d'espérance de vie de Gapminder ne contiennent aucune information pour l'Océanie et englobe l'Amérique dans un tout. J'ai décidé de webscrapé manuellement les données pour la population et l'espérance de vie de l'Amérique du Nord et du Sud individuellement pour compléter un peu le manque.
+Les données de vaccinations contiennent tout les continents avec l'Amérique séparée en deux, ainsi qu'une catégorie globale pour le total appellé 'WORLD'. Cependant les données de population ou d'espérance de vie de Gapminder ne contiennent aucune information pour l'Océanie et englobe l'Amérique dans un tout. J'ai décidé de webscrapé manuellement les données pour la population et l'espérance de vie de l'Amérique du Nord et du Sud individuellement pour compléter un peu le manque.
 
 De plus, les données de Gapminder nous donne de l'information sur beaucoup moins de pays que ceux des vaccins.Encore une fois, je pense que c'est parce que certains sont des territoires ou petite îles apartenant à des nations. C'est pour cela que lors de la combinaison des banques de données, tout les pays ou nations qui ne sont pas dans les trois ne sont pas prit en considération.
 
 
-Après de nombreuse manipulation que vous pouvez lire sur la page [3-manipulation](3-manipulation.html), j'ai réussis a épurer le tout pour visualiser ci-dessous.
+Après de nombreuses manipulations que vous pouvez lire sur la page [3-manipulation](3-manipulation.html), j'ai réussis a épurer le tout pour visualiser ci-dessous.
 
 
 ### Les plus grand pays

@@ -1,6 +1,6 @@
-name: "FAS1002_projet-final"
-title: "FAS1002 - Projet final"
-favicon: static/images/FAS1002.png
+name: "Taux de vaccination contre la Covid-19"
+title: "Taux de vaccination contre la Covid-19"
+favicon: img/vaccine.png
 # N'oubliez pas d'activer votre site web dans vos params sur GH.
 repository_url: https://github.com/FAS1002/FAS1002_projet-final
 description: |
@@ -9,40 +9,34 @@ output_dir: "docs"
 theme: static/theme.css
 navbar:
   logo:
-    image: static/images/FAS1002.png
+    image: img/vaccine.png
     href: index.html
   source_url: true
   left:
   # Vous pouvez supprimer ou changer les pages
-    - text: "Aide pour le site"
+    - text: "Pages"
       menu:
-        - text: "Distill Basics"
-          href: https://rstudio.github.io/distill/basics.html
-        - text: "Figure Layout"
-          href: https://rstudio.github.io/distill/figures.html
-        - text: "Tables"
-          href: https://rstudio.github.io/distill/tables.html
-        - text: "Diagrams"
-          href: https://rstudio.github.io/distill/diagrams.html
-        - text: "JavaScript & D3"
-          href: https://rstudio.github.io/distill/interactivity.html
-        - text: "---"
+        - text: "Page d'accueil"
+          href: index.html
+        - text: "Introduction"
+          href: 1-intro.html
+        - text: "Analyse"
+          href: 2-analyse.html
+        - text: "Manipulation"
+          href: 3-manipulation.html
         - text: "Citations"
-          href: https://rstudio.github.io/distill/citations.html
-        - text: "Article Metadata"
-          href: https://rstudio.github.io/distill/metadata.html
+          href: 4-citation.html
+        
   right:
   # L'ordre et les noms == arbitraires, usez de créativité.
     - text: "Introduction"
       href: 1-intro.html
-    - text: "Importation"
-      href: 2-import.html
-    - text: "Exploration"
-      href: 3-exploration.html
-    - text: "Visualisation"
-      href: 3-exploration.html
-    - text: "Contact"
-      href: contact.html
+    - text: "Analyse"
+      href: 2-analyse.html
+    - text: "Manipulation"
+      href: 3-manipulation.html
+    - text: "Citations"
+      href: 4-citation.html
 
       # voir https://fontawesome.com/v4.7/icons/ pour les icones
     - icon: fab fa-twitter

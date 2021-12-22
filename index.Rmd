@@ -1,22 +1,36 @@
 ---
-title: "Les taux de vaccinations"
-description: |
-site: distill::distill_website
-toc: no
+title: "Taux de vaccinations"
+description: | 
+date: "`r Sys.Date()`"
+author:
+  - first_name: "Emmanuel"
+    last_name: "Carranza"
+    url: https://github.com/emmanuel-carranza
+    affiliation: Université de Montréal
+    affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
+    orcid_id: 0000-0003-2651-6737
+citation_url:  https://github.com/Emmanuel-Carranza/FAS1002_projet-final
+bibliography: references.bib
+output: distill::distill_article
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-```
-
-  Il est difficile de croire que nous somme déjà rendu à la troisième dose du vaccins contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si, on se fit au graphique ci dessous c'est moins de la moitié. 
-  
-```{r}
 library(tidyverse)
 library(RColorBrewer)
 
 continent_vax <- read_csv("data/processed/continent_vax.csv")
+```
 
+![](img/vax_line.jpg)
+[@andrew_lichtenstein_interview_2020]
+
+Il est difficile de croire que nous somme déjà rendu à la troisième dose du vaccins contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si, on se fit au graphique ci dessous c'est moins de la moitié.
+
+```{r}
 graph_cont <- ggplot(continent_vax,
                  aes(x= reorder(paste(location, pop_text),population),
                       y= people_fully_vaccinated_per_hundred, fill=location))+
@@ -30,20 +44,15 @@ graph_cont <- ggplot(continent_vax,
         expand_limits(y = 100)+
         theme_minimal()+
         coord_flip()
-
-graph_cont
 ```
-  
- Dans les pages qui suivent, vous allez pouvoir avoir une description des banques de données utilisées ainsi que des variables les constituants sur la page [1-intro](1-intro.html). Une analyse et visualisations seront disponible sur la page [2-analyse](2-analyse.html). Pour ceux ayant suivit un cours de programmation R, la page [3-manipulation](3-manipulation.html) sera consacré aux bribe de code R qui m'ont servis tout au long de mon projet.^[Ce projet à été écrit en Décembre 2021.]
- 
- Pour terminer, l'ensemble des citations pour les sources des banques de données, ainsi que des packages utilisés, seront inscrits dans la page [4-citation](4-citation.html).
- 
- Bonne lecture !
- 
- 
 
+Dans les pages qui suivent, vous allez pouvoir avoir une description des banques de données utilisées ainsi que des variables les constituants sur la page [1-intro](1-intro.html). Une analyse plus détaillée ainsi que des visualisations seront disponible sur la page [2-analyse](2-analyse.html). Pour ceux qui ont suivit un cours de programmation R, la page [3-manipulation](3-manipulation.html) sera consacré aux bribe de code R qui m'ont servis tout au long de mon projet.[^1]
+
+[^1]: Ce projet à été écrit en Décembre 2021.
+
+
+Bonne lecture !
 
 ## Remerciements {.appendix}
 
-J'aimerais remercier mon enseignant pour le cours FAS1002 qui nous beaucoup
-appris cette session.
+J'aimerais remercier mon enseignant pour le cours FAS1002 qui nous beaucoup appris cette session.

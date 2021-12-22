@@ -10,7 +10,6 @@ author:
     affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
     orcid_id: 0000-0003-2651-6737
 citation_url:  https://github.com/Emmanuel-Carranza/FAS1002_projet-final
-# Installation: devtools::install_github("crsh/citr")
 bibliography: references.bib
 output: distill::distill_article
 editor_options: 
@@ -20,12 +19,25 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(plotly)
+library(tidyverse)
+library(rmarkdown)
+library(readxl)
+life_expectancy_country_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx",
+                                         sheet = 6, range = "A4:KQ201")
+life_expectancy_continent_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx",
+                                           sheet = 6, range = "A203:KQ208")
+raw_pop_country <- read_xlsx("data/raw/gapminder_pop.xlsx",
+                             sheet = 7, range = "A3:KQ200")
+raw_pop_continent <- read_xlsx("data/raw/gapminder_pop.xlsx",
+                               sheet = 7, range = "A202:KQ207")
+vax_country <- read_csv("data/processed/country_vax.csv")
+vax_continent <- read_csv("data/processed/continent_vax.csv")
+raw_vax <- read_csv("data/raw/covid19vacc.csv")
 ```
 
-Ma première banque de données provient de [Our World in Data](https://ourworldindata.org/).
-Grâce à leur merveilleux travail, j'ai pu acccèder au fichier .CSV sur leur page [Github](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations) qui contient les données de vaccinations de chaque pays mise à jour régulièrement.
-Ma deuxième provient tout droit de la fondation [Gapminder](https://www.gapminder.org/) qui nous fournit de l'information quant au [effectif de population](https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/edit#gid=501532268) ainsi que de [l'espérance de vie](https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/edit#gid=501532268) de chaque pays.
+
+
+Ma première banque de données provient de Our Wold in Data[@noauthor_covid-19_2021].Grâce à leur merveilleux travail, j'ai pu acccèder au fichier .CSV sur leur page Github qui contient les données de vaccinations de chaque pays mise à jour régulièrement. Ma deuxième provient tout droit de la fondation [Gapminder](https://www.gapminder.org/) qui nous fournit de l'information quant au [effectif de population](https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/edit#gid=501532268)[@noauthor_gm-population_nodate] ainsi que de [l'espérance de vie](https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/edit#gid=501532268)[@noauthor_gm-life_nodate-1] de chaque pays.
 
 ## Données Brutes
 
@@ -50,13 +62,11 @@ Chaque observation contient le nom d'un pays ou d'un continent, ainsi que des do
 -   total_boosters_per_hundred: nombre total de doses de rappel de vaccination COVID-19 administrées pour 100 personnes dans la population totale.
 
 ```{r,layout = "l-page"}
-library(tidyverse)
-library(rmarkdown)
-raw_vax <- read_csv("data/raw/covid19vacc.csv")
 paged_table(raw_vax)
 ```
+[Disponible sur:Github](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations) 
 
-### La banque de données des population de Gapminder
+### La banque de données des populations de Gapminder
 
 
 Cette banque de données contient des effectifs de population pour de centaines de pays ainsi que les continents d'Afrique, D'Asie, D'Europe et de la planète entière. J'ai remarqué de l'Océanie ne s'y trouve et je ne sais expliquer pourquoi.
@@ -69,10 +79,6 @@ Cette banque de données contient des effectifs de population pour de centaines 
 Par pays:
 
 ```{r,layout = "l-page"}
-library(readxl)
-
-raw_pop_country <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A3:KQ200")
-raw_pop_continent <- read_xlsx("data/raw/gapminder_pop.xlsx", sheet = 7, range = "A202:KQ207")
 paged_table(raw_pop_country)
 ```
 
@@ -92,8 +98,6 @@ Cette fois-ci nous avons les données sur l'espérance de vie moyenne des citoye
 Par pays:
 
 ```{r,layout = "l-page"}
-life_expectancy_country_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A4:KQ201")
-life_expectancy_continent_raw <- read_xlsx("data/raw/gapminder_lifeexp.xlsx", sheet = 6, range = "A203:KQ208")
 paged_table(life_expectancy_country_raw )
 ```
 
@@ -116,14 +120,11 @@ Je me suis débarassé des variables sur les quelles je ne voulais pas me concen
 J'ai mis de coté les continents pour plustard ainsi que des valeurs comme "High" income ou "Low Income" qui se trouvais dans la colonne "location" avec tout les autres pays.
 Pour terminer j'ai sélectionné simplement la dernière journée d'observations de chaque pays sans informations manquantes.
 
-Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
 
 ### Manipulation des données de population
 
 J'ai simplement selectionné les colonnes "location" pour les pays et "2021.0" puisque j'écris cette analyse en 2021.
 J'ai crée une autre banque de données avec les mêmes variables mais pour les continents
-
-Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
 
 ### Manipulation des données d'espérance de vie
 
@@ -136,13 +137,15 @@ J'ai jumelé les banques de données par pays et par continent en m'assurant de 
 Voici la banque de données nettoyé par pays :
 
 ```{r,layout = "l-page"}
-vax_country <- read_csv("data/processed/country_vax.csv")
 paged_table(vax_country)
 ```
 
 Voici la banque de données nettoyé par continent :
 
 ```{r,layout = "l-page"}
-vax_continent <- read_csv("data/processed/continent_vax.csv")
 paged_table(vax_continent)
 ```
+
+
+Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
+
