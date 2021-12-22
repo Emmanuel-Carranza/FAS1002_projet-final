@@ -1,9 +1,9 @@
 "location","total_vaccinations_per_hundred","Percentage","same_percentage","difference"
-"United States",149.12,148.72,"Incorrect",0.400000000000006
-"France",172,177.62,"Incorrect",5.62
-"New Zealand",156.3,164.72,"Incorrect",8.41999999999999
-"Israel",177.02,187.12,"Incorrect",10.1
+"United States",149.81,149.4,"Incorrect",0.409999999999997
+"France",175.72,181.46,"Incorrect",5.74000000000001
+"New Zealand",157.13,165.6,"Incorrect",8.47
+"Israel",177.5,187.62,"Incorrect",10.12
 "Singapore",174,160.93,"Incorrect",13.07
 "Serbia",117.88,93.13,"Incorrect",24.75
-"Malta",195.69,228.09,"Incorrect",32.4
-"Cyprus",161.39,118.96,"Incorrect",42.43
+"Malta",196.93,229.54,"Incorrect",32.61
+"Cyprus",165.97,122.33,"Incorrect",43.64

@@ -47,6 +47,8 @@ Cette banque de données est mise à jour quotidiennement, ce qui la rend très 
 Elle est consitué des dizaines des milliers d'observations avec multitude de variables.
 Chaque observation contient le nom d'un pays ou d'un continent, ainsi que des données par rapport au taux de vaccinations.
 
+Voici les variables :
+
 -   location : nom du pays (ou de la région d'un pays).
 -   iso_code : Codes de pays à trois lettres ou OWID pour continents
 -   date : date de l'observation.
@@ -71,6 +73,7 @@ paged_table(raw_vax)
 
 Cette banque de données contient des effectifs de population pour de centaines de pays ainsi que les continents d'Afrique, D'Asie, D'Europe et de la planète entière. J'ai remarqué de l'Océanie ne s'y trouve et je ne sais expliquer pourquoi.
 
+Voici les variables :
 
 -   geo : Codes de pays à trois lettres
 -   name: Nom du pays ou du continent
@@ -123,12 +126,13 @@ Pour terminer j'ai sélectionné simplement la dernière journée d'observations
 
 ### Manipulation des données de population
 
-J'ai simplement selectionné les colonnes "location" pour les pays et "2021.0" puisque j'écris cette analyse en 2021.
-J'ai crée une autre banque de données avec les mêmes variables mais pour les continents
+J'ai simplement selectionné les colonnes "location" pour les pays et "2021.0" puisque j'écris cette analyse en 2021. J'ai crée une autre banque de données avec les mêmes variables mais pour les continents
 
 ### Manipulation des données d'espérance de vie
 
 J'ai fais exactement la même chose que pour la précédante.
+
+Une explication plus détaillée des manipulations des 3 banques se trouve à la page [3-manipulation](3-manipulation.html)
 
 ### Jumelage des banques de données
 

@@ -1,8 +1,7 @@
 name: "Taux de vaccination contre la Covid-19"
 title: "Taux de vaccination contre la Covid-19"
 favicon: img/vaccine.png
-# N'oubliez pas d'activer votre site web dans vos params sur GH.
-repository_url: https://github.com/FAS1002/FAS1002_projet-final
+repository_url: https://github.com/Emmanuel-Carranza/FAS1002_projet-final
 description: |
   Projet final pour le cours FAS1002! 🔥
 output_dir: "docs"
@@ -24,8 +23,6 @@ navbar:
           href: 2-analyse.html
         - text: "Manipulation"
           href: 3-manipulation.html
-        - text: "Citations"
-          href: 4-citation.html
         
   right:
   # L'ordre et les noms == arbitraires, usez de créativité.
@@ -35,12 +32,8 @@ navbar:
       href: 2-analyse.html
     - text: "Manipulation"
       href: 3-manipulation.html
-    - text: "Citations"
-      href: 4-citation.html
 
       # voir https://fontawesome.com/v4.7/icons/ pour les icones
-    - icon: fab fa-twitter
-      href: https://twitter.com/VOTREUSERNAME
 creative_commons: CC BY
 
 output:

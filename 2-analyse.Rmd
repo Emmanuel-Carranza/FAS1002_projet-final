@@ -1,9 +1,7 @@
 ---
 title: "Analyse des banques de données"
 description: | 
-  Venant de World in Data & Gapminder
 date: "`r Sys.Date()`"
-# Modifier les détails que vous voulez
 author:
   - first_name: "Emmanuel"
     last_name: "Carranza"
@@ -11,12 +9,7 @@ author:
     affiliation: Université de Montréal
     affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
     orcid_id: 0000-0003-2651-6737
-# Changer pour votre propre URL si jamais quelqu'un vous cite!
-citation_url: https://fas1002.github.io/FAS1002_projet-final
-# Inclure les références que vous utilisez dans vos rapports
-# dans un fichier biblio.bib. Je conseille Zotero pour construire
-# ce fichier ou d'utiliser le package citr dans RStudio.
-# Installation: devtools::install_github("crsh/citr")
+citation_url: https://github.com/Emmanuel-Carranza/FAS1002_projet-final
 bibliography: references.bib
 output: distill::distill_article
 ---
@@ -217,49 +210,35 @@ Le seul pays qui n'est pas en Afrique ici c'est Papouasie-Nouvelle-Guinée. Plus
 ### Régression linéaire
 
 ```{r}
-ok <- read_csv("data/processed/country_vax.csv")
-
-lm_ok <- lm(population ~ people_fully_vaccinated_per_hundred, ok)
-
-summary (lm_ok)
-
-linear_reg <- ggplot(country_vax, aes(x=population, 
+linear_reg <- ggplot(country_vax, aes(x=life_expectancy, 
                          y=people_fully_vaccinated_per_hundred))+
           geom_point()+
-          geom_smooth(formula = y ~ log(x), method = "lm",
+          geom_smooth(method = "lm",
                       color = "#FFBF71")+
-          scale_x_continuous(trans = "log2")+
-          labs(x = "Pourcentage de citoyen d'un pays aillant reçu 2 doses",
-               y = "Temps sur échelle logarithmique",
-          title = "Taille de population VS pourcentage de vaccination à 2 dose")+
-          geom_text(aes(label=ifelse(population>1000000000,
-              as.character(location),'')),hjust=0.5,vjust=-1)
+          labs(x = "Espérance de vie (en années)",
+               y = "Pourcentage de vaccination",
+          title = "Espérance de vie vs taux de vaccination")
 
 linear_reg
 ```
-Call:
-lm(formula = population ~ people_fully_vaccinated_per_hundred, 
-    data = ok)
 
-Residuals:
-       Min         1Q     Median         3Q        Max 
- -59546397  -44290300  -31967563   -7886898 1388357550 
 
-Coefficients:
-                                    Estimate Std. Error t value Pr(>|t|)
-(Intercept)                         31739236   21644963   1.466    0.144
-people_fully_vaccinated_per_hundred   323619     437924   0.739    0.461
+```{r}
+lm_ok <- lm(people_fully_vaccinated_per_hundred ~ life_expectancy, country_vax)
 
-Residual standard error: 158100000 on 169 degrees of freedom
-Multiple R-squared:  0.003221,	Adjusted R-squared:  -0.002677 
-F-statistic: 0.5461 on 1 and 169 DF,  p-value: 0.4609
+summary (lm_ok)
+```
+
+Selon ces informations,le taux de vaccination par pays peut être expliqué par l'espérance de vie moyenne du même pays jusqu'à 60%.
+
+Et puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derière les données.
 
 ### Anova
 
 ```{r}
 anova_df <- country_vax %>% 
-    select(c("location","total_vaccinations","population")) %>% 
-    mutate(location=factor(location))
+    select(c("people_fully_vaccinated_per_hundred",
+             "life_expectancy","population"))
 
 
 anova_df <- stack(anova_df)
@@ -267,17 +246,7 @@ anova_df <- stack(anova_df)
 anova(lm(values ~ ind, anova_df))
 ```
 
-Null hypothese : Ya pas de difference entre les pays
-Rejet null hypo : Ya une difference entre les pays.
+Ici ma valeur F est à 13.88. Le plus gros la valeurs F, plus il y a de preuve qu'il y a une différence entre les moyennes des groupes.
 
-A null hypothesis is a type of hypothesis used in statistics that proposes that there is no difference between certain characteristics of a population 
 
-The p-value is greater than the threshold (0.05) meaning that the null hypothesis cannot be rejected and there is no significant association between the level of electricity consumed and the carbon dioxide emitted.
-
-Analysis of Variance Table
-
-Response: values
-           Df     Sum Sq    Mean Sq F value Pr(>F)
-ind         1 1.2872e+15 1.2872e+15  0.0356 0.8505
-Residuals 340 1.2302e+19 3.6182e+16  
-
+Puis que la valeur Pr(>F) est plus petite que le seuil de 0.05. On peut rejeter l'hypothèse nulle et conclure qu'il y a une différence statistique significative entre la moyenne des groupes.

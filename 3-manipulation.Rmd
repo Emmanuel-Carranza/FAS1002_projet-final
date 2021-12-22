@@ -2,7 +2,6 @@
 title: "Manipulation des banques de données"
 description: | 
 date: "`r Sys.Date()`"
-# Modifier les détails que vous voulez
 author:
   - first_name: "Emmanuel"
     last_name: "Carranza"
@@ -10,12 +9,7 @@ author:
     affiliation: Université de Montréal
     affiliation_url: https://admission.umontreal.ca/programmes/microprogramme-de-1er-cycle-en-analyse-des-megadonnees-en-sciences-humaines-et-sociales/structure-du-programme/
     orcid_id: 0000-0003-2651-6737
-# Changer pour votre propre URL si jamais quelqu'un vous cite!
 citation_url: https://fas1002.github.io/FAS1002_projet-final
-# Inclure les références que vous utilisez dans vos rapports
-# dans un fichier biblio.bib. Je conseille Zotero pour construire
-# ce fichier ou d'utiliser le package citr dans RStudio.
-# Installation: devtools::install_github("crsh/citr")
 bibliography: references.bib
 output: distill::distill_article
 ---
@@ -438,45 +432,81 @@ big_diff <- total_vax100_incorrect[order(total_vax100_incorrect$difference),]
 
 ```
 
-## Analyses statistiques
+## Combien de temps a passé depuis mon analyse ?
 
-### Régréssion linéaire
+```{r}
+days_passed <- difftime(Sys.time(),as.Date("2021-12-22"), units = "days")
 
-```{r,}
-lm_country_vax <- lm(population ~ people_fully_vaccinated_per_hundred, country_vax)
-
-summary (lm_country_vax)
-
-linear_reg <- ggplot(country_vax, aes(x=population, 
-                         y=people_fully_vaccinated_per_hundred))+
-          geom_point()+
-          geom_smooth(formula = y ~ log(x), method = "lm",
-                      color = "#FFBF71")+
-          scale_x_continuous(trans = "log2")+
-          labs(x = "Pourcentage de citoyen d'un pays aillant reçu 2 doses",
-               y = "Temps sur échelle logarithmique",
-          title = "Taille de population VS pourcentage de vaccination à 2 dose")+
-          geom_text(aes(label=ifelse(population>1000000000,
-              as.character(location),'')),hjust=0.5,vjust=-1)
+days_passed <- format(round(days_passed, 2), nsmall = 2)
 
 
+n_vax_2021_12_22 <- 4476161541
+#Le nombre de personnes ayant reçu au moins une doses du vaccin
+#au jour de ma publication.
+
+
+total_vax_world <- vax_raw %>% 
+              mutate(location=factor(location)) %>% 
+            filter(location == "World") %>%
+         slice(which.max(as.Date(date, '%Y/%m/%d')))
+#le résultat le plus récent pour la population total ayant reçu une dose
+
+total_vax_word <- total_vax_world$people_vaccinated
+#associe la valeur à un objet
+
+new_vax <- total_vax_word-n_vax_2021_12_22
+#soustraction du total d'aujourd'hui moins l'effectif lors de ma publication
+
+new_vax <- label_number_si(accuracy=0.1)(new_vax)
+#conversion en abbréviation
 ```
 
+
+## Analyses statistiques
+
+### Régression linéaire
+
+```{r}
+linear_reg <- ggplot(country_vax, aes(x=life_expectancy, 
+                         y=people_fully_vaccinated_per_hundred))+
+          geom_point()+
+          geom_smooth(method = "lm",
+                      color = "#FFBF71")+
+          labs(x = "Espérance de vie (en années)",
+               y = "Pourcentage de vaccination",
+          title = "Espérance de vie vs taux de vaccination")
+
+linear_reg
+```
+
+
+```{r}
+lm_ok <- lm(people_fully_vaccinated_per_hundred ~ life_expectancy, country_vax)
+
+summary (lm_ok)
+```
+
+Selon ces informations,le taux de vaccination par pays peut être expliqué par l'espérance de vie moyenne du même pays jusqu'à 60%.
+
+Et puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derière les données.
 
 ### Anova
 
 ```{r}
-
 anova_df <- country_vax %>% 
-    select(c("location","total_vaccinations","population")) %>% 
-    mutate(location=factor(location))
+    select(c("people_fully_vaccinated_per_hundred",
+             "life_expectancy","population"))
+
 
 anova_df <- stack(anova_df)
-
 
 anova(lm(values ~ ind, anova_df))
 ```
 
+Ici ma valeur F est à 13.88. Le plus gros la valeurs F, plus il y a de preuve qu'il y a une différence entre les moyennes des groupes.
+
+
+Puis que la valeur Pr(>F) est plus petite que le seuil de 0.05. On peut rejeter l'hypothèse nulle et conclure qu'il y a une différence statistique significative entre la moyenne des groupes.
 
 ## Exportation de mes données en CSV
 
@@ -489,4 +519,7 @@ write.csv(country_vax_everyday,"data/processed/all_observations_country_vax.csv"
 
 write.csv(big_diff,"data/processed/big_diff.csv", row.names = FALSE)
 ```
+
+
+
 
