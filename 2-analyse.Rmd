@@ -137,7 +137,7 @@ Après de nombreuses manipulations que vous pouvez lire sur la page [3-manipulat
 
 ### Les plus grand pays
 
-```{r}
+```{r,layout = "l-page"}
 country_vax <- read_csv("data/processed/country_vax.csv")
 
 biggest_countries <- country_vax[order(as.integer(country_vax$population),
@@ -164,7 +164,7 @@ Ce premier graphique nous donne un aperçu des données de vaccination pour les 
 
 
 ### Les continents
-```{r}
+```{r,layout = "l-page"}
 continent_vax <- read_csv("data/processed/continent_vax.csv")
 graph_cont <- ggplot(continent_vax,
                  aes(x= reorder(paste(location, pop_text),population),
@@ -184,7 +184,7 @@ graph_cont
 Ce graphique est clair et simple. Moins de 50% de la population a reçu deux doses du vaccin. Le plus marquant ici est encore le continent Africain qui a un taux beaucoup trop faible.
 
 ### Basse espérance de vie
-```{r}
+```{r,layout = "l-page"}
 lower_life_exp <- country_vax[order(as.integer(country_vax$life_expectancy),
                                     decreasing = FALSE), ] %>%
                                       head(10)
@@ -197,19 +197,20 @@ graph <- ggplot(lower_life_exp,
         geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
                     hjust = -0.1)+
         labs(x = "Pays et espérance de vie en années", y = "pourcentage ayant reçu 2 doses",
-            title = "Vaccination pour les pays avec espérance de vie la plus basse",
+            title = "Les pays avec espérance de vie la plus basse",
             caption = "Data source: Our World In Data & Gapminder")+
         expand_limits(y = 100)+
         theme_minimal()+
         coord_flip()
 graph
+
 ```
 Le seul pays qui n'est pas en Afrique ici c'est Papouasie-Nouvelle-Guinée. Plus ça avance plus ça va mal. La chose qu'ils ont tous en commmun c'est une espérance de vie assez basse comparé au reste du monde.Si une chose est certaine, c'est que le facteur socio-économique d'un environnement a une influence sur l'espérance de vie. Les conséquences de l'emprise socio-économique sont perçues aussi à travers des données de vaccination.
 
 
 ### Régression linéaire
 
-```{r}
+```{r,layout = "l-page"}
 linear_reg <- ggplot(country_vax, aes(x=life_expectancy, 
                          y=people_fully_vaccinated_per_hundred))+
           geom_point()+
