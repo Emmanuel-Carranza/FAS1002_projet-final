@@ -217,7 +217,8 @@ linear_reg <- ggplot(country_vax, aes(x=life_expectancy,
                       color = "#FFBF71")+
           labs(x = "Espérance de vie (en années)",
                y = "Pourcentage de vaccination",
-          title = "Espérance de vie vs taux de vaccination")
+          title = "Espérance de vie vs taux de vaccination")+
+          theme_minimal()
 
 linear_reg
 ```
