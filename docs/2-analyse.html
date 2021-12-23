@@ -2493,9 +2493,9 @@ Pages
 </ul>
 </nav>
 </div>
-<p>À fin de pouvoir explorer, analyser et visualiser les données de vaccinations, j’ai dû les regarder de très près. En effet on constate 357227 observations manquantes parmis les 69873 compilées. Après un peu de ménage, je peux compter 223 pays ou nations qui on contribués aux données. Noté que ce chiffre est plus élevé que le nombre de pays sur terre parce que certains sont des territoires appartenant à certaines nations qui sont situé dans un autre pays ou sur une ile.</p>
-<p>Parmis ces nations, on compte une moyenne 298 jours de communications par pays depuis le 1er décembre 2020. C’est le Denmark qui enchaine le bal avec son premier vaccin à un citoyen (suite aux phases d’essaies). Ce qui fait aussi du Denmark le pays avec le plus d’entrées individuels à 385. Il est suivit de proche par la Norvege, la Lettonie, les États-Unis et le Canada.</p>
-<p>On constate des grosses et petites différences entre les pourcentages de gens vaccinés par pays que Our World In Data nous donne et ceux que j’ai calculé moi même.</p>
+<p>Afin de pouvoir explorer, analyser et visualiser les données de vaccination, j’ai dû les regarder de très près. En effet on constate 357227 observations manquantes parmis les 69873 compilées. Après un peu de ménage, je peux compter 223 pays ou nations qui ont contribué aux données. Notez que ce chiffre est plus élevé que le nombre de pays sur terre parce que certains sont des territoires appartenant à des nations qui sont situés dans un autre pays ou sur une île.</p>
+<p>Parmi ces nations, on compte une moyenne 298 jours de communications par pays depuis le 1er décembre 2020. C’est le Denmark qui entame le bal avec son premier vaccin à un citoyen (suite aux phases d’essais). Ce qui fait aussi du Denmark le pays avec le plus d’entrées individuelles à 385. Il est suivit de proche par la Norvege, la Lettonie, les États-Unis et le Canada.</p>
+<p>On constate des grosses et petites différences entre les pourcentages de gens vaccinés par pays que Our World In Data nous donne et ceux que j’ai calculé moi-même.</p>
 <div class="layout-chunk" data-layout="l-page">
 <details>
 <summary>
@@ -2513,10 +2513,10 @@ Show code
   </script>
 </div>
 </div>
-<p>La colonne “Percentage” est celle que j’ai calculé en prennant le nombre total de vaccinations par pays divisé par la population total du pays. La colonne “difference” nous donne la différence de pourcentage constaté. Noté que le pourcentage peu effectivement dépasser le 100% puisque le nombre de vaccins administré va certainement dépasser celui de la population si on recoit 2 doses et plus pour chacun. Certaines différences semblent être négligeable et d’autres sont beaucoup trop grosses. Difficile de dire si c’est parce que les données de vaccinations n’ont pas bien été enregistré dans le pays, ou si c’est parce que les données de populations sont des estimer.</p>
-<p>Les données de vaccinations contiennent tout les continents avec l’Amérique séparée en deux, ainsi qu’une catégorie globale pour le total appellé ‘WORLD.’ Cependant les données de population ou d’espérance de vie de Gapminder ne contiennent aucune information pour l’Océanie et englobe l’Amérique dans un tout. J’ai décidé de webscrapé manuellement les données pour la population et l’espérance de vie de l’Amérique du Nord et du Sud individuellement pour compléter un peu le manque.</p>
-<p>De plus, les données de Gapminder nous donne de l’information sur beaucoup moins de pays que ceux des vaccins.Encore une fois, je pense que c’est parce que certains sont des territoires ou petite îles apartenant à des nations. C’est pour cela que lors de la combinaison des banques de données, tout les pays ou nations qui ne sont pas dans les trois ne sont pas prit en considération.</p>
-<p>Après de nombreuses manipulations que vous pouvez lire sur la page <a href="3-manipulation.html">3-manipulation</a>, j’ai réussis a épurer le tout pour visualiser ci-dessous.</p>
+<p>La colonne “Percentage” est celle que j’ai calculé en prennant le nombre total de vaccinations par pays, divisé par la population totale du pays. La colonne “difference” nous donne la différence de pourcentage constaté. Notez que le pourcentage peut effectivement dépasser le 100% puisque le nombre de vaccins administrés va certainement dépasser celui de la population, si on reçoit 2 doses et plus pour chacun. Certaines différences semblent être négligeables et d’autres sont beaucoup trop grosses. Difficile de dire si c’est parce que les données de vaccination n’ont pas bien été enregistrées dans le pays, ou si c’est parce que les données de populations sont des estimations.</p>
+<p>Les données de vaccination contiennent tous les continents avec l’Amérique séparée en deux, ainsi qu’une catégorie globale pour le total appellé ‘WORLD.’ Cependant les données de population ou d’espérance de vie de Gapminder ne contiennent aucune information pour l’Océanie et englobe l’Amérique dans un tout. J’ai décidé de webscraper manuellement les données pour la population et l’espérance de vie de l’Amérique du Nord et du Sud individuellement pour compléter un peu le manque.</p>
+<p>De plus, les données de Gapminder nous donne de l’information sur beaucoup moins de pays que ceux des vaccins.Encore une fois, je pense que c’est parce que certains sont des territoires ou petites îles apartenant à des nations. C’est pour cela que lors de la combinaison des banques de données, tout les pays ou nations qui ne sont pas dans les trois ne sont pas pris en considération.</p>
+<p>Après de nombreuses manipulations que vous pouvez lire sur la page <a href="3-manipulation.html">3-manipulation</a>, j’ai réussi à épurer le tout pour visualiser ci-dessous.</p>
 <h3 id="les-plus-grand-pays">Les plus grand pays</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2538,7 +2538,7 @@ Show code
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>geom_text</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>people_fully_vaccinated_per_hundred</span>,<span class='st'>"%"</span><span class='op'>)</span><span class='op'>)</span>,
                     hjust <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.1</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Pays &amp; taille de population "</span>, y <span class='op'>=</span> <span class='st'>"Ayant reçu 2 doses"</span>,
-            title <span class='op'>=</span> <span class='st'>"Vaccinations pour les pays les plus peuplés classé par taille"</span>,
+            title <span class='op'>=</span> <span class='st'>"Vaccination pour les pays les plus peuplés classé par taille"</span>,
             caption <span class='op'>=</span> <span class='st'>"Data source: Our World In Data &amp; Gapminder"</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expand_limits.html'>expand_limits</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
@@ -2549,7 +2549,7 @@ Show code
 </details>
 <p><img src="2-analyse_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
-<p>Ce premier graphique nous donne un aperçu des données de vaccinations pour les 10 plus grandes nations au monde. Le seul pays en Afrique, le Nigère se trouve à moins de 2% de vaccinations à ce jour (dec-2021). Mon hypothèse de départ est que la taille de la population dois avoir un effet sur la performance de vaccinations d’une population. Mais si on regarde la Chine ou L’Inde avec des populations de plus d’un milliard de personne : ils ont quand même réussit à accomplir beaucoup en peu de temps.</p>
+<p>Ce premier graphique nous donne un aperçu des données de vaccination pour les 10 plus grandes nations au monde. Le seul pays en Afrique, le Niger se trouve à moins de 2% de vaccinations à ce jour (dec-2021). Mon hypothèse de départ est que la taille de la population doit avoir un effet sur la performance de vaccinations d’une population. Mais si on regarde la Chine ou l’Inde avec des populations de plus d’un milliard de personnes : ils ont quand-même réussi à accomplir beaucoup en peu de temps.</p>
 <h3 id="les-continents">Les continents</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2566,7 +2566,7 @@ Show code
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>geom_text</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>people_fully_vaccinated_per_hundred</span>,<span class='st'>"%"</span><span class='op'>)</span><span class='op'>)</span>,
                     hjust <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.1</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Continent &amp; taille de population"</span>, y <span class='op'>=</span> <span class='st'>"Ayant reçu 2 doses"</span>,
-            title <span class='op'>=</span> <span class='st'>"Pourcentage de vaccinations par continent"</span>,
+            title <span class='op'>=</span> <span class='st'>"Pourcentage de vaccination par continent"</span>,
             caption <span class='op'>=</span> <span class='st'>"Data source: Our World In Data &amp; Gapminder"</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expand_limits.html'>expand_limits</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
@@ -2577,7 +2577,7 @@ Show code
 </details>
 <p><img src="2-analyse_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
 </div>
-<p>Ce graphique est claire et simple. Moins de 50% de la population à reçu deux doses du vaccin. Le plus marquant ici est encore le continent Africain qui a un taux beaucoup trop faible.</p>
+<p>Ce graphique est clair et simple. Moins de 50% de la population a reçu deux doses du vaccin. Le plus marquant ici est encore le continent Africain qui a un taux beaucoup trop faible.</p>
 <h3 id="basse-espérance-de-vie">Basse espérance de vie</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2597,7 +2597,7 @@ Show code
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>geom_text</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>people_fully_vaccinated_per_hundred</span>,<span class='st'>"%"</span><span class='op'>)</span><span class='op'>)</span>,
                     hjust <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.1</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Pays et espérance de vie en années"</span>, y <span class='op'>=</span> <span class='st'>"pourcentage ayant reçu 2 doses"</span>,
-            title <span class='op'>=</span> <span class='st'>"Vaccinations pour les pays avec espérance de vie la plus basse"</span>,
+            title <span class='op'>=</span> <span class='st'>"Vaccination pour les pays avec espérance de vie la plus basse"</span>,
             caption <span class='op'>=</span> <span class='st'>"Data source: Our World In Data &amp; Gapminder"</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/expand_limits.html'>expand_limits</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span><span class='op'>+</span>
         <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_minimal</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span>
@@ -2608,7 +2608,7 @@ Show code
 </details>
 <p><img src="2-analyse_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
 </div>
-<p>Le seul pays qui n’est pas en Afrique ici c’est Papouasie-Nouvelle-Guinée. Plus ca avance plus ca va mal. La chose qu’ils ont tous en commmun c’est une espérance de vie assez basse comparé au reste du monde.Si une chose qui est certaine, c’est que le facteur socio-économique d’un environnement a une influence sur l’espérance de vie(CITATION CHETTY, 2014). Les conséquences de l’emprise socio-économique sont perçu aussi a travers des données de vaccinations.</p>
+<p>Le seul pays qui n’est pas en Afrique ici c’est Papouasie-Nouvelle-Guinée. Plus ça avance plus ça va mal. La chose qu’ils ont tous en commmun c’est une espérance de vie assez basse comparé au reste du monde.Si une chose est certaine, c’est que le facteur socio-économique d’un environnement a une influence sur l’espérance de vie. Les conséquences de l’emprise socio-économique sont perçues aussi à travers des données de vaccination.</p>
 <h3 id="régression-linéaire">Régression linéaire</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2664,7 +2664,7 @@ Multiple R-squared:  0.6041,    Adjusted R-squared:  0.6017
 F-statistic: 257.9 on 1 and 169 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <p>Selon ces informations,le taux de vaccination par pays peut être expliqué par l’espérance de vie moyenne du même pays jusqu’à 60%.</p>
-<p>Et puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derière les données.</p>
+<p>Puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derrière les données.</p>
 <h3 id="anova">Anova</h3>
 <div class="layout-chunk" data-layout="l-body">
 <details>
@@ -2692,8 +2692,8 @@ Residuals 510 4.2399e+18 8.3136e+15
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
-<p>Ici ma valeur F est à 13.88. Le plus gros la valeurs F, plus il y a de preuve qu’il y a une différence entre les moyennes des groupes.</p>
-<p>Puis que la valeur Pr(&gt;F) est plus petite que le seuil de 0.05. On peut rejeter l’hypothèse nulle et conclure qu’il y a une différence statistique significative entre la moyenne des groupes.</p>
+<p>Ici ma valeur F est à 13.88. Plus grand est la valeur F plus il y a de preuves qu’il y a une différence entre les moyennes des groupes.</p>
+<p>Puisque la valeur Pr(&gt;F) est plus petite que le seuil de 0.05, on peut rejeter l’hypothèse nulle et conclure qu’il y a une différence statistique significative entre la moyenne des groupes.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

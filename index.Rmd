@@ -61,13 +61,13 @@ new_vax <- label_number_si(accuracy=0.1)(new_vax)
 ![](img/vax_line.jpg)
 [@andrew_lichtenstein_interview_2020]
 
-Il est difficile de croire que nous somme déjà rendu à la troisième dose du vaccins contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si, on se fit au graphique ci dessous c'est moins de la moitié.[^1]
+Il est difficile de croire que nous sommew déjà rendus à la troisième dose du vaccin contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si on se fie au graphique ci-dessous c'est moins de la moitié de la population mondiale.[^1]
 
 ![](img/graph_cont_2021_12.jpg)
 
-[^1]: Mon analyse à été fait en décembre 2021, ce graphique est le seul qui n'est pas mis à jour quotidiennement avec les nouvelles données de vaccinations.
+[^1]: Mon analyse a été produite en décembre 2021; ce graphique est le seul qui n'est pas mis à jour quotidiennement avec les nouvelles données de vaccinations.
 
-J'ai publié mon projet final le 22 décembre 2021.Depuis, `r days_passed` (jours) ont passés et `r new_vax` de personnes de plus ont reçu leur première dose du vaccin contre la Covid-19. Le graphique ci-dessous contient les taux par continent avec les données les plus récente.
+J'ai publié mon projet final le 22 décembre 2021.Depuis, `r days_passed` (jours) sont passés et `r new_vax` de personnes de plus ont reçu leur première dose du vaccin contre la Covid-19. Le graphique ci-dessous contient les taux par continent avec les données les plus récentes.
 
 
 ```{r}
@@ -79,7 +79,7 @@ graph_cont <- ggplot(continent_vax,
         geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
                     hjust = -0.1)+
         labs(x = " ", y = "Ayant reçu 2 doses",
-            title = "Pourcentage de vaccinations par continent",
+            title = "Pourcentage de vaccination par continent",
             caption = "Data source: Our World In Data")+
         expand_limits(y = 100)+
         theme_minimal()+
@@ -87,11 +87,11 @@ graph_cont <- ggplot(continent_vax,
 graph_cont
 ```
 
-Dans les pages qui suivent, vous allez pouvoir avoir une description des données utilisées ainsi que des variables les constituants sur la page [1-intro](1-intro.html). Une analyse plus détaillée ainsi que des visualisations seront disponible sur la page [2-analyse](2-analyse.html). Pour ceux qui ont suivit un cours de programmation R, la page [3-manipulation](3-manipulation.html) sera consacré aux bribe de code R qui m'ont servis tout au long de mon projet.
+Dans les pages qui suivent, vous verrez une description des données utilisées, ainsi que des variables les constituant sur la page [1-intro](1-intro.html). Une analyse plus détaillée ainsi que des visualisations seront disponibles sur la page [2-analyse](2-analyse.html). Pour ceux qui ont suivi un cours de programmation R, la page [3-manipulation](3-manipulation.html) sera consacrée aux bribes de code R qui m'ont servi tout au long de mon projet.
 
 
 Bonne lecture !
 
 ## Remerciements {.appendix}
 
-J'aimerais remercier mon enseignant pour le cours FAS1002 qui nous beaucoup appris cette session.
+J'aimerais remercier mon enseignant pour le cours FAS1002 qui nous a beaucoup appris cette session.

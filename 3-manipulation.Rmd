@@ -341,7 +341,7 @@ graph <- ggplot(lower_life_exp,
         geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
                     hjust = -0.1)+
         labs(x = "Pays et espérance de vie en années", y = "pourcentage ayant reçu 2 doses",
-            title = "Vaccinations pour les pays avec espérance de vie la plus basse",
+            title = "Vaccination pour les pays avec espérance de vie la plus basse",
             caption = "Data source: Our World In Data & Gapminder")+
         expand_limits(y = 100)+
         theme_minimal()+
@@ -366,7 +366,7 @@ graph2 <- ggplot(biggest_countries,
         geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
                     hjust = -0.1)+
         labs(x = "Pays & taille de population ", y = "Ayant reçu 2 doses",
-            title = "Vaccinations pour les pays les plus peuplés classé par taille",
+            title = "Vaccination pour les pays les plus peuplés classé par taille",
             caption = "Data source: Our World In Data & Gapminder")+
         expand_limits(y = 100)+
         theme_minimal()+
@@ -377,7 +377,7 @@ graph2
 ```
 
 
-### Taux de vaccinations par continents
+### Taux de vaccination par continent
 
 ```{r}
 graph_cont <- ggplot(continent_vax,
@@ -388,7 +388,7 @@ graph_cont <- ggplot(continent_vax,
         geom_text(aes(label = paste0(people_fully_vaccinated_per_hundred,"%")),
                     hjust = -0.1)+
         labs(x = "Continent & taille de population", y = "Ayant reçu 2 doses",
-            title = "Pourcentage de vaccinations par continent",
+            title = "Pourcentage de vaccination par continent",
             caption = "Data source: Our World In Data & Gapminder")+
         expand_limits(y = 100)+
         theme_minimal()+
@@ -488,7 +488,7 @@ summary (lm_ok)
 
 Selon ces informations,le taux de vaccination par pays peut être expliqué par l'espérance de vie moyenne du même pays jusqu'à 60%.
 
-Et puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derière les données.
+Puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derrière les données.
 
 ### Anova
 
@@ -503,10 +503,9 @@ anova_df <- stack(anova_df)
 anova(lm(values ~ ind, anova_df))
 ```
 
-Ici ma valeur F est à 13.88. Le plus gros la valeurs F, plus il y a de preuve qu'il y a une différence entre les moyennes des groupes.
+Ici ma valeur F est à 13.88. Plus grand est la valeur F plus il y a de preuves qu'il y a une différence entre les moyennes des groupes.
 
-
-Puis que la valeur Pr(>F) est plus petite que le seuil de 0.05. On peut rejeter l'hypothèse nulle et conclure qu'il y a une différence statistique significative entre la moyenne des groupes.
+Puisque la valeur Pr(>F) est plus petite que le seuil de 0.05, on peut rejeter l'hypothèse nulle et conclure qu'il y a une différence statistique significative entre la moyenne des groupes.
 
 ## Exportation de mes données en CSV
 

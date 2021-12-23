@@ -37,14 +37,14 @@ raw_vax <- read_csv("data/raw/covid19vacc.csv")
 
 
 
-Ma première banque de données provient de Our Wold in Data[@noauthor_covid-19_2021].Grâce à leur merveilleux travail, j'ai pu acccèder au fichier .CSV sur leur page Github qui contient les données de vaccinations de chaque pays mise à jour régulièrement. Ma deuxième provient tout droit de la fondation [Gapminder](https://www.gapminder.org/) qui nous fournit de l'information quant au [effectif de population](https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/edit#gid=501532268)[@noauthor_gm-population_nodate] ainsi que de [l'espérance de vie](https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/edit#gid=501532268)[@noauthor_gm-life_nodate-1] de chaque pays.
+Ma première banque de données provient de Our World in Data[@noauthor_covid-19_2021].Grâce à leur merveilleux travail, j'ai pu acccèder au fichier .CSV sur leur page Github qui contient les données de vaccination de chaque pays mises à jour régulièrement. Ma deuxième provient directement de la fondation [Gapminder](https://www.gapminder.org/) qui nous fournit de l'information quant aux [effectifs de population](https://docs.google.com/spreadsheets/d/14_suWY8fCPEXV0MH7ZQMZ-KndzMVsSsA5HdR-7WqAC0/edit#gid=501532268)[@noauthor_gm-population_nodate] ainsi que de [l'espérance de vie](https://docs.google.com/spreadsheets/d/11mulzUH3_cueq-V9D5KIlo9oHE9YYZrUSeVyCin7_rM/edit#gid=501532268)[@noauthor_gm-life_nodate-1] de chaque pays.
 
 ## Données Brutes
 
-### La banque de données de vaccinations de Our World in Data
+### La banque de données de vaccination de Our World in Data
 
 Cette banque de données est mise à jour quotidiennement, ce qui la rend très fiable.
-Elle est consitué des dizaines des milliers d'observations avec multitude de variables.
+Elle est constituée de dizaines des milliers d'observations avec une multitude de variables.
 Chaque observation contient le nom d'un pays ou d'un continent, ainsi que des données par rapport au taux de vaccinations.
 
 Voici les variables :
@@ -71,7 +71,7 @@ paged_table(raw_vax)
 ### La banque de données des populations de Gapminder
 
 
-Cette banque de données contient des effectifs de population pour de centaines de pays ainsi que les continents d'Afrique, D'Asie, D'Europe et de la planète entière. J'ai remarqué de l'Océanie ne s'y trouve et je ne sais expliquer pourquoi.
+Cette banque de données contient des effectifs de population pour de centaines de pays ainsi que les continents d'Afrique, d'Asie, d'Europe et de la planète entière. Toutefois, j'ai remarqué que l'Océanie ne s'y trouve pas.
 
 Voici les variables :
 
@@ -94,8 +94,8 @@ paged_table(raw_pop_continent)
 
 ### La banque de données d'espérance de vie de Gapminder
 
-Cette banque est très similaire à la précédante.
-Elle contient les mêmes pays, continents et années que la précédante.
+Cette banque est très similaire à la précédente.
+Elle contient les mêmes pays, continents et années que la précédente.
 Cette fois-ci nous avons les données sur l'espérance de vie moyenne des citoyens par pays respectif à travers les années.
 
 Par pays:
@@ -110,46 +110,20 @@ Par continent :
 paged_table(life_expectancy_continent_raw )
 ```
 
-## Données nettoyés, polis et résumés
+## Données nettoyées, polies et résumées
 
-### Manipulation des données de vaccinations
-
-Puisque les données brutes sont des observations venant des différents pays sans régulations homogène, nous n'avons pas le privilège de pouvoir les analysé directement.Pour certains pays : il manque de l'information.Pour beaucoup d'autres, elles en sont pas transmissent de façon quotidienne.
-Et nous venons d'apprendre que 2 doses ne seront pas suffisantes.
-
-Mais cela ne pose aucun problème puisque j'ai accès au Tidyverse et ses multiples packages.
-J'ai commencer par regarder la banque de données en tableau pour avoir un aspect plus visuel.
-Je me suis débarassé des variables sur les quelles je ne voulais pas me concentrer.
-J'ai mis de coté les continents pour plustard ainsi que des valeurs comme "High" income ou "Low Income" qui se trouvais dans la colonne "location" avec tout les autres pays.
-Pour terminer j'ai sélectionné simplement la dernière journée d'observations de chaque pays sans informations manquantes.
-
-
-### Manipulation des données de population
-
-J'ai simplement selectionné les colonnes "location" pour les pays et "2021.0" puisque j'écris cette analyse en 2021. J'ai crée une autre banque de données avec les mêmes variables mais pour les continents
-
-### Manipulation des données d'espérance de vie
-
-J'ai fais exactement la même chose que pour la précédante.
-
-Une explication plus détaillée des manipulations des 3 banques se trouve à la page [3-manipulation](3-manipulation.html)
-
-### Jumelage des banques de données
-
-J'ai jumelé les banques de données par pays et par continent en m'assurant de garder la dernière observation par pays sans information manquante. Les fichiers CSV que vous pouvez voir ci-dessous contiennent la plus récente observation par pays et non l'ensemble de celles compililé tout les jours.
-
-Voici la banque de données nettoyé par pays :
+Voici la banque de données nettoyée par pays :
 
 ```{r,layout = "l-page"}
 paged_table(vax_country)
 ```
 
-Voici la banque de données nettoyé par continent :
+Voici la banque de données nettoyée par continent :
 
 ```{r,layout = "l-page"}
 paged_table(vax_continent)
 ```
 
 
-Mes constats par rapport aux données se trouve dans la page [2-analyse](2-analyse.html).
+Mes constats par rapport aux données se trouvent dans la page [2-analyse](2-analyse.html).
 
