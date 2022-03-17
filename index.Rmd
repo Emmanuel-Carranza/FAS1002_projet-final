@@ -48,7 +48,6 @@ total_vax_world <- vax_raw %>%
 #le résultat le plus récent pour la population total ayant reçu une dose
 
 total_vax_word <- total_vax_world$people_vaccinated
-#associe la valeur à un objet
 
 new_vax <- total_vax_word-n_vax_2021_12_22
 #soustraction du total d'aujourd'hui moins l'effectif lors de ma publication
@@ -61,13 +60,13 @@ new_vax <- label_number_si(accuracy=0.1)(new_vax)
 ![](img/vax_line.jpg)
 [@andrew_lichtenstein_interview_2020]
 
-Il est difficile de croire que nous sommew déjà rendus à la troisième dose du vaccin contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si on se fie au graphique ci-dessous c'est moins de la moitié de la population mondiale.[^1]
+Il est difficile de croire que nous sommes déjà rendus à la troisième dose du vaccin contre la Covid-19 alors que la moitié de la planète n'a pas encore reçu sa deuxième dose. En effet si on se fie au graphique ci-dessous c'est moins de la moitié de la population mondiale.[^1]
 
 ![](img/graph_cont_2021_12.jpg)
 
-[^1]: Mon analyse a été produite en décembre 2021; ce graphique est le seul qui n'est pas mis à jour quotidiennement avec les nouvelles données de vaccinations.
+[^1]: Mon analyse a été produite en décembre 2021; tout comme ce graphique, les informations ne seront pas mises à jours après la publication.
 
-J'ai publié mon projet final le 22 décembre 2021.Depuis, `r days_passed` (jours) sont passés et `r new_vax` de personnes de plus ont reçu leur première dose du vaccin contre la Covid-19. Le graphique ci-dessous contient les taux par continent avec les données les plus récentes.
+Le graphique ci-dessous contient les taux par continent avec les données du 22 décembre 2021.
 
 
 ```{r}
