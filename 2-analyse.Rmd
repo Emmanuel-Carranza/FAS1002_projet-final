@@ -233,8 +233,6 @@ summary (lm_ok)
 
 Selon ces informations,le taux de vaccination par pays peut être expliqué par l'espérance de vie moyenne du même pays jusqu'à 60%.
 
-Puisque mon P-value se trouve en bas du seuil de 0.05 : mon modèle représente bien une explication derrière les données.
-
 ### Anova
 
 ```{r}
@@ -248,6 +246,3 @@ anova_df <- stack(anova_df)
 anova(lm(values ~ ind, anova_df))
 ```
 
-Ici ma valeur F est à 13.88. Plus grand est la valeur F plus il y a de preuves qu'il y a une différence entre les moyennes des groupes.
-
-Puisque la valeur Pr(>F) est plus petite que le seuil de 0.05, on peut rejeter l'hypothèse nulle et conclure qu'il y a une différence statistique significative entre la moyenne des groupes.
