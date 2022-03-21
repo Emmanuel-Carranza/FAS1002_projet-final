@@ -2,12 +2,11 @@ An english message will follow.
 
 ## Taux de vaccinations contre la covid-19
 
-Cette [pageweb](https://github.com/Emmanuel-Carranza/FAS1002_projet-final) contient une analyse des données de vaccinations par pays et par continent. Pour pouvoir re-utiliser mon code et mes données: vous allez avoir besoin des pacakes listé ci-dessous.
+Cette [pageweb](https://github.com/Emmanuel-Carranza/FAS1002_projet-final) contient une analyse des données de vaccinations par pays et par continent. Pour pouvoir répliquer l'experience, vous allez avoir besoin des packages listés ci-dessous.
 
 ## Vaccination rates against Covid-19
 
-This [webpage](https://github.com/Emmanuel-Carranza/FAS1002_projet-final) contains an analysis of vaccination rates per country and continents. My whole document is in French. To use my code and data you will need the following packages.
-
+This [webpage](https://github.com/Emmanuel-Carranza/FAS1002_projet-final) contains an analysis of vaccination rates per country and continents. The document is in French. To repeat this experience you will need the following packages.
 
 
 ```
